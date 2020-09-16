@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import MapOne from "./components/MapOne";
+
+export default class App extends Component {
+  state = {
+    lat: "",
+    lng: "",
+  };
+
+  componentDidMount() {
+    this.getCurrentLocation();
+  }
+
+  //get my geo locations
+  getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position.coords);
+        this.setState({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    }
+  };
+
+  render() {
+    if (this.state.lat) {
+      return (
+        <div>
+          <MapOne lat={this.state.lat} lng={this.state.lng} />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h4 style={{ color: "#f0ad4e" }}>
+            Please allow location access to load the map
+          </h4>
+        </div>
+      );
+    }
+  }
 }
-
-export default App;
